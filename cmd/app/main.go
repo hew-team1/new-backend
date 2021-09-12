@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"guild-hack-api/app/interfaces/api"
+	"log"
+)
 
 func main() {
-	fmt.Println("Hello world")
+	var port int
+	s := api.NewServer()
+	if err := s.Init(); err != nil {
+		log.Fatal(err)
+	}
+	port = 8080
+	s.Run(port)
 }
