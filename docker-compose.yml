@@ -1,0 +1,49 @@
+# docker-compose.yml はコンテナが立ち上がったタイミング(docker-compose up を実行した時)
+version: "3.8"
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: guild-hack
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_USER: guild-hack
+      MYSQL_PASSWORD: guild-hack
+      TZ: Asia/Tokyo
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./database/my.cnf:/etc/mysql/conf.d/my.cnf
+    restart: on-failure
+
+  #  flyway:
+  #    image: flyway/flyway
+  #    container_name: flyway
+  #    volumes:
+  #      - ./database/migration/schema:/flyway/sql
+  #    depends_on:
+  #      - db
+
+  api:
+    build:
+      context: .
+    command: reflex -r '\.go$$' -s -- sh -c 'go run cmd/app/main.go'
+    container_name: guild-hack-app
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - 8080:8080
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    depends_on:
+      - api
+    environment:
+      - SWAGGER_JSON=/app/swagger/swagger.yaml
+    ports:
+      - 8081:8081
+    volumes:
+      - ./swagger/:/swagger
