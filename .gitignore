@@ -1,1 +1,25 @@
-.idea/
+.*
+!.github
+!.gitignore
+!*.env.example
+!.dockerignore
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+.idea
+
+database/data

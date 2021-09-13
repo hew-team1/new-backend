@@ -58,7 +58,7 @@ __docker-compose/down-rm:
 DBNAME := guild-hack
 .PHONY: db/exec
 db/exec:
-	docker compose exec db bash
+	docker compose exec db mysql -u guild-hack -pguild-hack
 
 .PHONY: __db/drop
 __db/drop:
