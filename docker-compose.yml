@@ -30,7 +30,7 @@ services:
     build:
       context: .
     command: reflex -r '\.go$$' -s -- sh -c 'go run cmd/app/main.go'
-    container_name: guild-hack-app
+    container_name: guild-hack-api
     volumes:
       - .:/app
     working_dir: /app
@@ -43,8 +43,8 @@ services:
     depends_on:
       - api
     environment:
-      - SWAGGER_JSON=/app/swagger/swagger.yaml
+      - SWAGGER_JSON=/swagger/swagger.yaml
     ports:
-      - 8081:8081
+      - 8081:8080
     volumes:
       - ./swagger/:/swagger
