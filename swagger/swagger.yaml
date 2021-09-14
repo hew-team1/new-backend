@@ -1,103 +1,493 @@
-openapi: 3.0.0
+swagger: '2.0'
 info:
-  title: swagger
+  title: Guild Hack
   version: '1.0'
-servers:
-  - url: 'http://localhost:3000'
+  description: Guild Hack API
+host: 'localhost:8080'
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
 paths:
   /users:
     post:
-      summary: Create New User
+      summary: 新しいユーザの作成
       operationId: post-user
+      description: 新しいユーザを作成する
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/CreateUserRequest'
+          description: ''
       responses:
-        '200':
-          description: User Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                New User Bob Fellow:
-                  value:
-                    id: 12
-                    firstName: Bob
-                    lastName: Fellow
-                    email: bob.fellow@gmail.com
-                    dateOfBirth: '1996-08-24'
-                    emailVerified: false
-                    createDate: '2020-11-18'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                dateOfBirth:
-                  type: string
-                  format: date
-              required:
-                - firstName
-                - lastName
-                - email
-                - dateOfBirth
-            examples:
-              Create User Bob Fellow:
-                value:
-                  firstName: Bob
-                  lastName: Fellow
-                  email: bob.fellow@gmail.com
-                  dateOfBirth: '1996-08-24'
-        description: Post the necessary fields for the API to create a new user.
-      description: Create a new user.
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/CreateUserResponse'
+      tags:
+        - User
     parameters: []
     get:
-      summary: ''
+      summary: ユーザ一覧を取得
       operationId: get-users
       responses:
         '200':
           description: OK
-  /Recruit:
+          schema:
+            $ref: '#/definitions/UserList'
+      description: ユーザのリストを取得する
+      tags:
+        - User
+  '/users/{user_id}':
+    parameters:
+      - type: string
+        name: user_id
+        in: path
+        required: true
     get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-      operationId: get-Recruit
-    post:
-      summary: ''
-      operationId: post-Recruit
+      summary: ユーザの取得
+      tags:
+        - User
       responses:
         '200':
           description: OK
-    parameters: []
-components:
-  schemas:
-    User:
-      title: User
-      type: object
-      description: ''
-      x-examples:
-        Alice Smith:
-          id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the given user.
-        email:
-          type: string
-          format: email
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
+          schema:
+            $ref: '#/definitions/User'
+      operationId: get-users-user_id
+      description: 指定されたidのユーザの取得
+  /recruits:
+    get:
+      summary: 募集一覧の取得
+      tags:
+        - Recruit
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RecruitList'
+      operationId: get-recruits
+      description: 募集のリストを取得
+    post:
+      summary: 新しい募集の作成
+      operationId: post-recruits
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/CreateRecruitResponse'
+      tags:
+        - Recruit
+      description: 新しい募集の作成
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/CreateRecruitRequest'
+  '/recruits/{recruits_id}':
+    parameters:
+      - type: string
+        name: recruits_id
+        in: path
+        required: true
+    get:
+      summary: 募集の取得
+      tags:
+        - Recruit
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Recruit'
+      operationId: get-recruits-recruits_id
+      description: 指定されたidの募集の取得
+  '/recruits/{recruits_id}/members':
+    parameters:
+      - type: string
+        name: recruits_id
+        in: path
+        required: true
+    get:
+      summary: 参加者一覧を取得
+      tags:
+        - Member
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MemberList'
+      operationId: get-recruits-recruits_id-members
+      description: 募集の参加者のリストを取得
+    post:
+      summary: 新しい参加者の作成
+      operationId: post-recruits-recruits_id-members
+      responses:
+        '200':
+          description: OK
+      description: 募集の新しい参加者の作成
+      tags:
+        - Member
+definitions:
+  User:
+    title: User
+    type: object
+    description: ユーザの情報
+    x-examples: {}
+    properties:
+      id:
+        type: integer
+        description: ユーザのid
+        format: int64
+        example: 99999
+      uid:
+        type: string
+        description: ユーザのfirebaseの識別子
+        example: aBcdEfgh1gklMn0p9rstuvwXyZ
+      name:
+        type: string
+        description: ユーザの名前
+        example: 開発太郎
+      email:
+        type: string
+        description: ユーザのメールアドレス
+        format: email
+        example: user@example.com
+    x-tags:
+      - User
+  UserList:
+    title: UserList
+    type: object
+    description: ユーザ情報のリスト
+    properties:
+      users:
+        type: array
+        description: ユーザの一覧
+        items:
+          $ref: '#/definitions/User'
+  CreateUserRequest:
+    title: CreateUserRequest
+    type: object
+    description: ユーザ作成時のリクエスト
+    properties:
+      uid:
+        type: string
+        example: aBcdEfgh1gklMn0p9rstuvwXyZ
+        description: ユーザのfirebaseの識別子
+      name:
+        type: string
+        example: 開発太郎
+        description: ユーザの名前
+      email:
+        type: string
+        description: ユーザのメールアドレス
+        format: email
+        example: user@example.com
+  CreateUserResponse:
+    title: CreateUserResponse
+    type: object
+    description: ユーザ作成時のレスポンス
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: ユーザのid
+      uid:
+        type: string
+        example: aBcdEfgh1gklMn0p9rstuvwXyZ
+        description: ユーザのfirebaseの識別子
+      name:
+        type: string
+        example: 開発太郎
+        description: ユーザの名前
+      email:
+        type: string
+        format: email
+        example: user@example.com
+        description: ユーザのメールアドレス
+      created_at:
+        type: string
+        description: ユーザ情報の作成日時
+      updated_at:
+        type: string
+        description: ユーザ情報の更新日時
+  Recruit:
+    title: Recruit
+    type: object
+    description: 募集の情報
+    properties:
+      id:
+        type: integer
+        description: 募集のid
+        format: int64
+        example: 9999
+      title:
+        type: string
+        description: 募集のタイトル
+        example: ハッカソンに参加しよう！
+      user_id:
+        type: integer
+        description: 募集をしたユーザのid
+        example: '99999'
+        format: int64
+      organizer:
+        type: string
+        description: 募集の参加ハッカソンの開催者
+        example: Google
+      commit_frequency:
+        type: string
+        description: 募集に対して参加できる頻度
+        enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+        example: '3'
+      message:
+        type: string
+        description: 募集のメッセージ
+        example: みんなでわいわい話しながら開発がしたいです！
+      join_number:
+        type: integer
+        format: int64
+        description: 募集の参加者数
+      is_beginner:
+        type: boolean
+        description: 募集が初心者歓迎かどうか
+      is_award:
+        type: boolean
+        description: 募集の参加ハッカソンに賞があるかどうか
+      slack_url:
+        type: string
+        description: 募集の参加者がやりとりをするSlackのURL
+        format: uri
+      start_date:
+        type: string
+        description: 募集の参加ハッカソンの開発の開始日
+      end_date:
+        type: string
+        description: 募集の参加ハッカソンの開発の終了日
+  RecruitList:
+    title: RecruitList
+    type: object
+    description: 募集情報のリスト
+    properties:
+      recruits:
+        type: array
+        description: 募集の一覧
+        items:
+          $ref: '#/definitions/Recruit'
+  CreateRecruitRequest:
+    title: CreateRecruitRequest
+    type: object
+    description: 募集作成時のリクエスト
+    properties:
+      title:
+        type: string
+        description: 募集のタイトル
+        example: ハッカソンに参加しよう！
+      user_id:
+        type: integer
+        description: 募集をしたユーザのid
+        example: '99999'
+        format: int64
+      organizer:
+        type: string
+        description: 募集の参加ハッカソンの開催者
+        example: Google
+      commit_frequency:
+        type: string
+        description: 募集に対して参加できる頻度
+        enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+        example: '3'
+      message:
+        type: string
+        description: 募集のメッセージ
+        example: みんなでわいわい話しながら開発がしたいです！
+      join_number:
+        type: integer
+        description: 募集の参加者数
+        format: int64
+      is_beginner:
+        type: boolean
+        description: 募集が初心者歓迎かどうか
+      is_award:
+        type: boolean
+        description: 募集の参加ハッカソンに賞があるかどうか
+      slack_url:
+        type: string
+        description: 募集の参加者がやりとりをするSlackのURL
+        format: uri
+      start_date:
+        type: string
+        description: 募集の参加ハッカソンの開発の開始日
+      end_date:
+        type: string
+        description: 募集の参加ハッカソンの開発の終了日
+  CreateRecruitResponse:
+    title: CreateRecruitResponse
+    type: object
+    description: 募集作成時のレスポンス
+    properties:
+      id:
+        type: integer
+        description: 募集のid
+        format: int64
+        example: 9999
+      title:
+        type: string
+        description: 募集のタイトル
+        example: ハッカソンに参加しよう！
+      user_id:
+        type: integer
+        description: 募集をしたユーザのid
+        example: '99999'
+        format: int64
+      organizer:
+        type: string
+        description: 募集の参加ハッカソンの開催者
+        example: Google
+      commit_frequency:
+        type: string
+        description: 募集に対して参加できる頻度
+        enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+        example: '3'
+      message:
+        type: string
+        description: 募集のメッセージ
+        example: みんなでわいわい話しながら開発がしたいです！
+      join_number:
+        type: integer
+        description: 募集の参加者数
+        format: int64
+      is_beginner:
+        type: boolean
+        description: 募集が初心者歓迎かどうか
+      is_award:
+        type: boolean
+        description: 募集の参加ハッカソンに賞があるかどうか
+      slack_url:
+        type: string
+        description: 募集の参加者がやりとりをするSlackのURL
+        format: uri
+      start_date:
+        type: string
+        description: 募集の参加ハッカソンの開発の開始日
+      end_date:
+        type: string
+        description: 募集の参加ハッカソンの開発の終了日
+      created_at:
+        type: string
+        description: 募集情報の作成日時
+      updated_at:
+        type: string
+        description: 募集情報の更新日時
+  Member:
+    title: Member
+    type: object
+    description: 募集の参加者の情報
+    properties:
+      user_id:
+        type: integer
+        format: int64
+        description: 参加者のid
+        example: 212
+      recruit_id:
+        type: integer
+        format: int64
+        description: 参加する募集のid
+        example: 111
+      position:
+        type: string
+        description: 参加者のポジション
+        enum:
+          - frontend
+          - backend
+          - infra
+        example: frontend
+  MemberList:
+    title: MemberList
+    type: object
+    properties:
+      members:
+        type: array
+        description: 参加者の一覧
+        items:
+          $ref: '#/definitions/Member'
+    description: 参加者情報のリスト
+  CreateMemberRequest:
+    title: CreateMemberRequest
+    type: object
+    description: 募集の参加者作成時のリクエスト
+    properties:
+      user_id:
+        type: integer
+        format: int64
+        description: 参加者のid
+        example: 212
+      recruit_id:
+        type: integer
+        format: int64
+        description: 参加する募集のid
+        example: 111
+      position:
+        type: string
+        description: 参加者のポジション
+        enum:
+          - frontend
+          - backend
+          - infra
+        example: frontend
+  CreateMemberResponse:
+    title: CreateMemberResponse
+    type: object
+    description: 募集の参加者作成時のレスポンス
+    properties:
+      user_id:
+        type: integer
+        format: int64
+        description: 参加者のid
+        example: 212
+      recruit_id:
+        type: integer
+        format: int64
+        description: 参加する募集のid
+        example: 111
+      position:
+        type: string
+        description: 参加者のポジション
+        enum:
+          - frontend
+          - backend
+          - infra
+        example: frontend
+      created_at:
+        type: string
+        description: 参加者の作成日時
+      updated_at:
+        type: string
+        description: 参加者の更新日時
+basePath: /v1
+securityDefinitions: {}
+tags:
+  - name: Member
+  - name: Recruit
+  - name: User
