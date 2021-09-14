@@ -91,7 +91,7 @@ flyway/repair:
 flyway/baseline:
 	docker compose run --rm flyway baseline -baselineVersion=1 -baselineDescription="default tables"
 
-.PHOTY: flyway/clean
+.PHONY: flyway/clean
 __flyway/clean:
 	docker compose run --rm flyway clean
 
@@ -109,3 +109,9 @@ go/vet:
 .PHONY: go/get
 go/get:
 	go get -v ./...
+
+.PHONY: go/install
+	go install github.com/go-swagger/go-swagger/cmd/swagger@latest
+
+.PHONY: go/gen
+	swagger generate model -f swagger/swagger.yaml -m generated_swagger -t ./swagger
