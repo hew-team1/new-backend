@@ -116,4 +116,4 @@ go/install:
 
 .PHONY: go/gen
 go/gen:
-	swagger generate model -f swagger/swagger.yaml -m generated_swagger -t ./swagger
+	swagger generate model -f swagger.yaml -m generated_swagger -t ./swagger
