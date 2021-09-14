@@ -47,4 +47,4 @@ services:
     ports:
       - 8081:8080
     volumes:
-      - ./swagger.yaml:swagger.yaml
+      - ./swagger.yaml:/swagger.yaml
