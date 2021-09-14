@@ -29,7 +29,7 @@ paths:
             $ref: '#/definitions/CreateUserResponse'
       tags:
         - User
-    parameters: [ ]
+    parameters: []
     get:
       summary: ユーザ一覧を取得
       operationId: get-users
@@ -134,7 +134,7 @@ definitions:
     title: User
     type: object
     description: ユーザの情報
-    x-examples: { }
+    x-examples: {}
     properties:
       id:
         type: integer
@@ -184,6 +184,10 @@ definitions:
         description: ユーザのメールアドレス
         format: email
         example: user@example.com
+    required:
+      - uid
+      - name
+      - email
   CreateUserResponse:
     title: CreateUserResponse
     type: object
@@ -335,6 +339,18 @@ definitions:
       end_date:
         type: string
         description: 募集の参加ハッカソンの開発の終了日
+    required:
+      - title
+      - user_id
+      - organizer
+      - commit_frequency
+      - message
+      - join_number
+      - is_beginner
+      - is_award
+      - slack_url
+      - start_date
+      - end_date
   CreateRecruitResponse:
     title: CreateRecruitResponse
     type: object
@@ -456,6 +472,10 @@ definitions:
           - backend
           - infra
         example: frontend
+    required:
+      - user_id
+      - recruit_id
+      - position
   CreateMemberResponse:
     title: CreateMemberResponse
     type: object
@@ -486,7 +506,7 @@ definitions:
         type: string
         description: 参加者の更新日時
 basePath: /v1
-securityDefinitions: { }
+securityDefinitions: {}
 tags:
   - name: Member
   - name: Recruit
