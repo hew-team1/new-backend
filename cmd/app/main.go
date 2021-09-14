@@ -1,8 +1,9 @@
 package main
 
 import (
-	"guild-hack-api/app/interfaces/api"
 	"log"
+
+	"guild-hack-api/app/interfaces/api"
 )
 
 func main() {
