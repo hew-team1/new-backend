@@ -111,7 +111,9 @@ go/get:
 	go get -v ./...
 
 .PHONY: go/install
+go/install:
 	go install github.com/go-swagger/go-swagger/cmd/swagger@latest
 
 .PHONY: go/gen
+go/gen:
 	swagger generate model -f swagger/swagger.yaml -m generated_swagger -t ./swagger
