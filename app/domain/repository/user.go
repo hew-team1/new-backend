@@ -19,6 +19,7 @@ func InsertUser(db *sqlx.Tx, user *model.User) (int64, error) {
 
 	var id int64
 	result, err := stmt.Exec(user.Uid, user.Name, user.Email)
+	// この辺りでDBのエラーを
 	if err != nil {
 		return 0, err
 	}
@@ -29,7 +30,7 @@ func InsertUser(db *sqlx.Tx, user *model.User) (int64, error) {
 	return id, nil
 }
 
-func FindUser(db *sqlx.DB, id int64) (*model.User, error) {
+func FindUserById(db *sqlx.DB, id int64) (*model.User, error) {
 	var user model.User
 	err := db.Get(&user, "SELECT * FROM users WHERE id = ?", id)
 	if err != nil {

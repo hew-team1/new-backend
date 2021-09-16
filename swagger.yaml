@@ -27,6 +27,7 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/CreateUserResponse'
+          headers: {}
       tags:
         - User
     parameters: []

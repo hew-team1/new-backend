@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/go-openapi/swag"
@@ -26,7 +25,7 @@ func (h *UserHandler) Create(_ http.ResponseWriter, r *http.Request) (int, inter
 		return http.StatusBadRequest, nil, err
 	}
 
-	createdId, err := h.userUseCase.Create(
+	user, err := h.userUseCase.Create(
 		swag.StringValue(req.UID),
 		swag.StringValue(req.Name),
 		req.Email.String(),
@@ -35,7 +34,5 @@ func (h *UserHandler) Create(_ http.ResponseWriter, r *http.Request) (int, inter
 		return http.StatusInternalServerError, nil, err
 	}
 
-	user, err := h.userUseCase.Show(createdId)
-	fmt.Println(user.CreateResponseSwaggerModel())
 	return http.StatusCreated, user.CreateResponseSwaggerModel(), nil
 }

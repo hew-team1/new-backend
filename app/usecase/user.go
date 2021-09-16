@@ -19,7 +19,7 @@ func NewUserUseCase(db *sqlx.DB) *UserUseCase {
 		db: db,
 	}
 }
-func (u *UserUseCase) Create(uid string, name string, email string) (int64, error) {
+func (u *UserUseCase) Create(uid string, name string, email string) (*model.User, error) {
 	newUser := &model.User{
 		Uid:   uid,
 		Name:  name,
@@ -38,11 +38,8 @@ func (u *UserUseCase) Create(uid string, name string, email string) (int64, erro
 		}
 		return err
 	}); err != nil {
-		return 0, fmt.Errorf("failed user insert transaction: %w", err)
+		return nil, fmt.Errorf("failed user insert transaction: %w", err)
 	}
-	return createId, nil
-}
 
-func (u *UserUseCase) Show(id int64) (*model.User, error) {
-	return repository.FindUser(u.db, id)
+	return repository.FindUserById(u.db, createId)
 }

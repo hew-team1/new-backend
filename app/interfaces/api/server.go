@@ -28,7 +28,7 @@ func NewServer() *Server {
 }
 
 func (s *Server) Init() error {
-	cs := db.NewMySQL("guild-hack:guild-hack@tcp(db:3306)/guild_hack")
+	cs := db.NewMySQL("guild-hack:guild-hack@tcp(db:3306)/guild_hack?parseTime=true")
 	dbcon, err := cs.Open()
 	if err != nil {
 		return fmt.Errorf("failed db init. %s", err)
