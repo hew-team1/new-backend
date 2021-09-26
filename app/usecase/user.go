@@ -47,3 +47,7 @@ func (u *UserUseCase) Create(uid string, name string, email string) (*model.User
 func (u *UserUseCase) Index() ([]model.User, error) {
 	return repository.AllUser(u.db)
 }
+
+func (u *UserUseCase) Show(id int64) (*model.User, error) {
+	return repository.FindUserById(u.db, id)
+}

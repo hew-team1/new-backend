@@ -2,9 +2,12 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/go-openapi/swag"
+	"github.com/gorilla/mux"
 
+	"guild-hack-api/app/interfaces/api/httputil"
 	"guild-hack-api/app/usecase"
 	"guild-hack-api/swagger/generated_swagger"
 )
@@ -48,4 +51,24 @@ func (h *UserHandler) Index(_ http.ResponseWriter, r *http.Request) (int, interf
 		resUsers = append(resUsers, u.SwaggerModel())
 	}
 	return http.StatusOK, generated_swagger.UserList{Users: resUsers}, nil
+}
+
+func (h *UserHandler) Show(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	vars := mux.Vars(r)
+	strId, ok := vars["user_id"]
+	if !ok {
+		return http.StatusBadRequest, nil, &httputil.HTTPError{Message: "invalid path parameter"}
+	}
+
+	uid, err := strconv.ParseInt(strId, 10, 64)
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	user, err := h.userUseCase.Show(uid)
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	return http.StatusOK, user.SwaggerModel(), nil
 }
