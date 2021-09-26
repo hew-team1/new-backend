@@ -19,7 +19,7 @@ func NewUserUseCase(db *sqlx.DB) *UserUseCase {
 		db: db,
 	}
 }
-func (u *UserUseCase) Create(uid string, name string, email string) (*model.User, error) {
+func (u *UserUseCase) CreateAndFindUser(uid string, name string, email string) (*model.User, error) {
 	newUser := &model.User{
 		Uid:   uid,
 		Name:  name,

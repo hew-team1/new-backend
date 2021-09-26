@@ -28,7 +28,7 @@ func (h *UserHandler) Create(_ http.ResponseWriter, r *http.Request) (int, inter
 		return http.StatusBadRequest, nil, err
 	}
 
-	user, err := h.userUseCase.Create(
+	user, err := h.userUseCase.CreateAndFindUser(
 		swag.StringValue(req.UID),
 		swag.StringValue(req.Name),
 		req.Email.String(),
