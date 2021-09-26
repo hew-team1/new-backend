@@ -77,5 +77,6 @@ func (s *Server) Route() *mux.Router {
 
 	v1r := r.PathPrefix("/v1").Subrouter()
 	v1r.Methods(http.MethodPost, http.MethodOptions).Path("/users").Handler(commonChain.Then(AppHandler{userHandler.Create}))
+	v1r.Methods(http.MethodGet, http.MethodOptions).Path("/users").Handler(commonChain.Then(AppHandler{userHandler.Index}))
 	return r
 }

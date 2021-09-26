@@ -38,3 +38,12 @@ func FindUserById(db *sqlx.DB, id int64) (*model.User, error) {
 	}
 	return &user, nil
 }
+
+func AllUser(db *sqlx.DB) ([]model.User, error) {
+	var users []model.User
+	err := db.Select(&users, "SELECT id, uid, name, email FROM users")
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
