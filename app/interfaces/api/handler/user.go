@@ -36,3 +36,16 @@ func (h *UserHandler) Create(_ http.ResponseWriter, r *http.Request) (int, inter
 
 	return http.StatusCreated, user.CreateResponseSwaggerModel(), nil
 }
+
+func (h *UserHandler) Index(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	users, err := h.userUseCase.Index()
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	var resUsers []*generated_swagger.User
+	for _, u := range users {
+		resUsers = append(resUsers, u.SwaggerModel())
+	}
+	return http.StatusOK, generated_swagger.UserList{Users: resUsers}, nil
+}

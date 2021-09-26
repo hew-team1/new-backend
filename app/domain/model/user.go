@@ -27,3 +27,12 @@ func (u *User) CreateResponseSwaggerModel() *generated_swagger.CreateUserRespons
 		UpdatedAt: u.UpdatedAt.Format("2006-01-02T15:04"),
 	}
 }
+
+func (u *User) SwaggerModel() *generated_swagger.User {
+	return &generated_swagger.User{
+		ID:    u.Id,
+		UID:   u.Uid,
+		Name:  u.Name,
+		Email: strfmt.Email(u.Email),
+	}
+}
