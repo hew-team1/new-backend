@@ -50,6 +50,7 @@ func (s *Server) Run(port int) {
 }
 
 func (s *Server) Route() *mux.Router {
+	authMiddleware := middleware.NewAuth(s.db)
 	corsMiddleware := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedHeaders: []string{"Authorization", "Accept-Language", "Content-Type", "Content-Language", "Origin"},
@@ -64,7 +65,14 @@ func (s *Server) Route() *mux.Router {
 		},
 	})
 
-	commonChain := alice.New(middleware.RecoverMiddleware, corsMiddleware.Handler)
+	commonChain := alice.New(
+		middleware.RecoverMiddleware,
+		corsMiddleware.Handler,
+	)
+
+	authChain := commonChain.Append(
+		authMiddleware.Handler,
+	)
 
 	r := mux.NewRouter()
 	r.Methods(http.MethodGet).Path("/ping").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
