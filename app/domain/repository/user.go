@@ -47,3 +47,12 @@ func AllUser(db *sqlx.DB) ([]model.User, error) {
 	}
 	return users, nil
 }
+
+func FindUserByUsername(db *sqlx.DB, username string) (*model.User, error) {
+	var user model.User
+	err := db.Get(&user, "SELECT * FROM users WHERE name = ?", username)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
