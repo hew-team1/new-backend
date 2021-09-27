@@ -87,6 +87,8 @@ paths:
           name: body
           schema:
             $ref: '#/definitions/CreateRecruitRequest'
+      security:
+        - Authorization: []
   '/recruits/{recruits_id}':
     parameters:
       - type: string
@@ -130,6 +132,8 @@ paths:
       description: 募集の新しい参加者の作成
       tags:
         - Member
+      security:
+        - Authorization: []
 definitions:
   User:
     title: User
@@ -507,7 +511,11 @@ definitions:
         type: string
         description: 参加者の更新日時
 basePath: /v1
-securityDefinitions: {}
+securityDefinitions:
+  Authorization:
+    name: Authorization
+    type: apiKey
+    in: header
 tags:
   - name: Member
   - name: Recruit
