@@ -28,7 +28,9 @@ type Recruit struct {
 	CommitFrequency string `json:"commit_frequency,omitempty"`
 
 	// 募集の参加ハッカソンの開発の終了日
-	EndDate string `json:"end_date,omitempty"`
+	// Example: 2006-01-02
+	// Format: date
+	EndDate strfmt.Date `json:"end_date,omitempty"`
 
 	// 募集のid
 	// Example: 9999
@@ -52,11 +54,14 @@ type Recruit struct {
 	Organizer string `json:"organizer,omitempty"`
 
 	// 募集の参加者がやりとりをするSlackのURL
+	// Example: https://example.com
 	// Format: uri
 	SlackURL strfmt.URI `json:"slack_url,omitempty"`
 
 	// 募集の参加ハッカソンの開発の開始日
-	StartDate string `json:"start_date,omitempty"`
+	// Example: 2006-01-02
+	// Format: date
+	StartDate strfmt.Date `json:"start_date,omitempty"`
 
 	// 募集のタイトル
 	// Example: ハッカソンに参加しよう！
@@ -75,7 +80,15 @@ func (m *Recruit) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateEndDate(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSlackURL(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStartDate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -142,12 +155,36 @@ func (m *Recruit) validateCommitFrequency(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Recruit) validateEndDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.EndDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("end_date", "body", "date", m.EndDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Recruit) validateSlackURL(formats strfmt.Registry) error {
 	if swag.IsZero(m.SlackURL) { // not required
 		return nil
 	}
 
 	if err := validate.FormatOf("slack_url", "body", "uri", m.SlackURL.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Recruit) validateStartDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.StartDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("start_date", "body", "date", m.StartDate.String(), formats); err != nil {
 		return err
 	}
 

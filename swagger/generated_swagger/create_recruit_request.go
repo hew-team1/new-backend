@@ -29,8 +29,10 @@ type CreateRecruitRequest struct {
 	CommitFrequency *string `json:"commit_frequency"`
 
 	// 募集の参加ハッカソンの開発の終了日
+	// Example: 2006-01-02
 	// Required: true
-	EndDate *string `json:"end_date"`
+	// Format: date
+	EndDate *strfmt.Date `json:"end_date"`
 
 	// 募集の参加ハッカソンに賞があるかどうか
 	// Required: true
@@ -55,23 +57,21 @@ type CreateRecruitRequest struct {
 	Organizer *string `json:"organizer"`
 
 	// 募集の参加者がやりとりをするSlackのURL
+	// Example: https://example.com
 	// Required: true
 	// Format: uri
 	SlackURL *strfmt.URI `json:"slack_url"`
 
 	// 募集の参加ハッカソンの開発の開始日
+	// Example: 2006-01-02
 	// Required: true
-	StartDate *string `json:"start_date"`
+	// Format: date
+	StartDate *strfmt.Date `json:"start_date"`
 
 	// 募集のタイトル
 	// Example: ハッカソンに参加しよう！
 	// Required: true
 	Title *string `json:"title"`
-
-	// 募集をしたユーザのid
-	// Example: 99999
-	// Required: true
-	UserID *int64 `json:"user_id"`
 }
 
 // Validate validates this create recruit request
@@ -115,10 +115,6 @@ func (m *CreateRecruitRequest) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTitle(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateUserID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -192,6 +188,10 @@ func (m *CreateRecruitRequest) validateEndDate(formats strfmt.Registry) error {
 		return err
 	}
 
+	if err := validate.FormatOf("end_date", "body", "date", m.EndDate.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -259,21 +259,16 @@ func (m *CreateRecruitRequest) validateStartDate(formats strfmt.Registry) error 
 		return err
 	}
 
-	return nil
-}
-
-func (m *CreateRecruitRequest) validateTitle(formats strfmt.Registry) error {
-
-	if err := validate.Required("title", "body", m.Title); err != nil {
+	if err := validate.FormatOf("start_date", "body", "date", m.StartDate.String(), formats); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *CreateRecruitRequest) validateUserID(formats strfmt.Registry) error {
+func (m *CreateRecruitRequest) validateTitle(formats strfmt.Registry) error {
 
-	if err := validate.Required("user_id", "body", m.UserID); err != nil {
+	if err := validate.Required("title", "body", m.Title); err != nil {
 		return err
 	}
 

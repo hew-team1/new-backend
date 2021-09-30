@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
 	"strings"
@@ -25,7 +26,7 @@ func (auth *Auth) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		a := r.Header.Get("Authentication")
+		a := r.Header.Get("Authorization")
 		pair := strings.SplitN(a, " ", 2)
 		if len(pair) < 2 {
 			httputil.RespondErrorJson(w, http.StatusUnauthorized, errors.New("not enough authentication"))
@@ -38,12 +39,15 @@ func (auth *Auth) Handler(next http.Handler) http.Handler {
 
 		username := pair[1]
 		if user, err := repository.FindUserByUsername(auth.db, username); err != nil {
+			if err == sql.ErrNoRows {
+				httputil.RespondErrorJson(w, http.StatusUnauthorized, errors.New("the authenticated user did not exist"))
+				return
+			}
+			
 			httputil.RespondErrorJson(w, http.StatusInternalServerError, err)
 			return
-		} else if user == nil {
-			httputil.RespondErrorJson(w, http.StatusUnauthorized, errors.New("the authenticated user did not exist"))
-			return
 		} else {
+			ctx = httputil.SetUserToContext(r.Context(), user)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
 	})

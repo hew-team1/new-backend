@@ -82,11 +82,15 @@ func (s *Server) Route() *mux.Router {
 
 	userUseCase := usecase.NewUserUseCase(s.db)
 	userHandler := handler.NewUserHandler(userUseCase)
+	recruitUseCase := usecase.NewRecruitUseCase(s.db)
+	recruitHandler := handler.NewRecruitHandler(recruitUseCase)
 
 	v1r := r.PathPrefix("/v1").Subrouter()
 	v1r.Methods(http.MethodPost, http.MethodOptions).Path("/users").Handler(commonChain.Then(AppHandler{userHandler.Create}))
 	v1r.Methods(http.MethodGet, http.MethodOptions).Path("/users").Handler(commonChain.Then(AppHandler{userHandler.Index}))
 	v1r.Methods(http.MethodGet, http.MethodOptions).Path("/users/{user_id}").Handler(commonChain.Then(AppHandler{userHandler.Show}))
+
+	v1r.Methods(http.MethodPost, http.MethodOptions).Path("/recruits").Handler(authChain.Then(AppHandler{recruitHandler.Create}))
 
 	return r
 }

@@ -274,12 +274,17 @@ definitions:
         type: string
         description: 募集の参加者がやりとりをするSlackのURL
         format: uri
+        example: 'https://example.com'
       start_date:
         type: string
         description: 募集の参加ハッカソンの開発の開始日
+        format: date
+        example: '2006-01-02'
       end_date:
         type: string
         description: 募集の参加ハッカソンの開発の終了日
+        example: '2006-01-02'
+        format: date
   RecruitList:
     title: RecruitList
     type: object
@@ -299,11 +304,6 @@ definitions:
         type: string
         description: 募集のタイトル
         example: ハッカソンに参加しよう！
-      user_id:
-        type: integer
-        description: 募集をしたユーザのid
-        example: '99999'
-        format: int64
       organizer:
         type: string
         description: 募集の参加ハッカソンの開催者
@@ -338,15 +338,19 @@ definitions:
         type: string
         description: 募集の参加者がやりとりをするSlackのURL
         format: uri
+        example: 'https://example.com'
       start_date:
         type: string
         description: 募集の参加ハッカソンの開発の開始日
+        example: '2006-01-02'
+        format: date
       end_date:
         type: string
         description: 募集の参加ハッカソンの開発の終了日
+        format: date
+        example: '2006-01-02'
     required:
       - title
-      - user_id
       - organizer
       - commit_frequency
       - message
@@ -409,12 +413,17 @@ definitions:
         type: string
         description: 募集の参加者がやりとりをするSlackのURL
         format: uri
+        example: 'https://example.com'
       start_date:
         type: string
         description: 募集の参加ハッカソンの開発の開始日
+        format: date
+        example: '2006-01-02'
       end_date:
         type: string
         description: 募集の参加ハッカソンの開発の終了日
+        format: date
+        example: '2006-01-02'
       created_at:
         type: string
         description: 募集情報の作成日時
