@@ -71,11 +71,6 @@ type CreateRecruitRequest struct {
 	// Example: ハッカソンに参加しよう！
 	// Required: true
 	Title *string `json:"title"`
-
-	// 募集をしたユーザのid
-	// Example: 99999
-	// Required: true
-	UserID *int64 `json:"user_id"`
 }
 
 // Validate validates this create recruit request
@@ -119,10 +114,6 @@ func (m *CreateRecruitRequest) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTitle(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateUserID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -277,15 +268,6 @@ func (m *CreateRecruitRequest) validateStartDate(formats strfmt.Registry) error 
 func (m *CreateRecruitRequest) validateTitle(formats strfmt.Registry) error {
 
 	if err := validate.Required("title", "body", m.Title); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CreateRecruitRequest) validateUserID(formats strfmt.Registry) error {
-
-	if err := validate.Required("user_id", "body", m.UserID); err != nil {
 		return err
 	}
 

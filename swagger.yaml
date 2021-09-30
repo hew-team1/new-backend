@@ -303,11 +303,6 @@ definitions:
         type: string
         description: 募集のタイトル
         example: ハッカソンに参加しよう！
-      user_id:
-        type: integer
-        description: 募集をしたユーザのid
-        example: '99999'
-        format: int64
       organizer:
         type: string
         description: 募集の参加ハッカソンの開催者
@@ -354,7 +349,6 @@ definitions:
         example: '2006-01-02'
     required:
       - title
-      - user_id
       - organizer
       - commit_frequency
       - message
