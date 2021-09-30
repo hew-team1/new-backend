@@ -29,8 +29,10 @@ type CreateRecruitRequest struct {
 	CommitFrequency *string `json:"commit_frequency"`
 
 	// 募集の参加ハッカソンの開発の終了日
+	// Example: 2006-01-02
 	// Required: true
-	EndDate *string `json:"end_date"`
+	// Format: date
+	EndDate *strfmt.Date `json:"end_date"`
 
 	// 募集の参加ハッカソンに賞があるかどうか
 	// Required: true
@@ -60,8 +62,10 @@ type CreateRecruitRequest struct {
 	SlackURL *strfmt.URI `json:"slack_url"`
 
 	// 募集の参加ハッカソンの開発の開始日
+	// Example: 2006-01-02
 	// Required: true
-	StartDate *string `json:"start_date"`
+	// Format: date
+	StartDate *strfmt.Date `json:"start_date"`
 
 	// 募集のタイトル
 	// Example: ハッカソンに参加しよう！
@@ -192,6 +196,10 @@ func (m *CreateRecruitRequest) validateEndDate(formats strfmt.Registry) error {
 		return err
 	}
 
+	if err := validate.FormatOf("end_date", "body", "date", m.EndDate.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -256,6 +264,10 @@ func (m *CreateRecruitRequest) validateSlackURL(formats strfmt.Registry) error {
 func (m *CreateRecruitRequest) validateStartDate(formats strfmt.Registry) error {
 
 	if err := validate.Required("start_date", "body", m.StartDate); err != nil {
+		return err
+	}
+
+	if err := validate.FormatOf("start_date", "body", "date", m.StartDate.String(), formats); err != nil {
 		return err
 	}
 
