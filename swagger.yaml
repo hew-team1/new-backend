@@ -274,6 +274,7 @@ definitions:
         type: string
         description: 募集の参加者がやりとりをするSlackのURL
         format: uri
+        example: 'https://example.com'
       start_date:
         type: string
         description: 募集の参加ハッカソンの開発の開始日
@@ -337,6 +338,7 @@ definitions:
         type: string
         description: 募集の参加者がやりとりをするSlackのURL
         format: uri
+        example: 'https://example.com'
       start_date:
         type: string
         description: 募集の参加ハッカソンの開発の開始日
@@ -411,6 +413,7 @@ definitions:
         type: string
         description: 募集の参加者がやりとりをするSlackのURL
         format: uri
+        example: 'https://example.com'
       start_date:
         type: string
         description: 募集の参加ハッカソンの開発の開始日

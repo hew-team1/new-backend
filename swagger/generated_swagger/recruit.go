@@ -54,6 +54,7 @@ type Recruit struct {
 	Organizer string `json:"organizer,omitempty"`
 
 	// 募集の参加者がやりとりをするSlackのURL
+	// Example: https://example.com
 	// Format: uri
 	SlackURL strfmt.URI `json:"slack_url,omitempty"`
 

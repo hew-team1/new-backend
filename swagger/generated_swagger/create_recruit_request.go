@@ -57,6 +57,7 @@ type CreateRecruitRequest struct {
 	Organizer *string `json:"organizer"`
 
 	// 募集の参加者がやりとりをするSlackのURL
+	// Example: https://example.com
 	// Required: true
 	// Format: uri
 	SlackURL *strfmt.URI `json:"slack_url"`
